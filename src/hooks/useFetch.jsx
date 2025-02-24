@@ -9,20 +9,17 @@ export function useFetch(url) {
     const fetchData = async () => {
       setIsPending(true);
       try {
-        const req = await fetch(
-          `https://json-api.uz/api/project/f-quiz/quizzes`
-        );
-        console.log("Fetch request:", req); // So‘rovni tekshirish
+        const req = await fetch(url);
+        console.log(req);
         if (!req.ok) {
           throw new Error(req.statusText);
         }
         const data = await req.json();
-        console.log("Fetched data:", data); // Ma'lumotlarni tekshirish
         setData(data);
+        setIsPending(false);
       } catch (err) {
         setError(err.message);
-        console.error("Fetch error:", err.message); // Xatolikni chiqarish
-      } finally {
+        console.log(err.message);
         setIsPending(false);
       }
     };

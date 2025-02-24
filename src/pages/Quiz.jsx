@@ -14,9 +14,7 @@ function Quiz() {
     data: quizzes,
     isPending,
     error,
-  } = useFetch(
-    ` https://json-api.uz/api/project/f-quiz/quizzes?title=${title}`
-  );
+  } = useFetch(`https://json-api.uz/api/project/f-quiz/quizzes?title=${title}`);
 
   useEffect(() => {
     document.title = "Quiz" + " " + title;
