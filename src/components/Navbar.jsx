@@ -1,25 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 import { Link, useParams } from "react-router-dom";
 
-const toggleMode = () => {
-  return localStorage.getItem("darkMode") || "light";
+// Reducer uchun boshlang‘ich holat
+const initialState = {
+  theme: localStorage.getItem("darkMode") || "light",
 };
+
+// Reducer funksiyasi
+function reducer(state, action) {
+  switch (action.type) {
+    case "TOGGLE_THEME":
+      const newTheme = state.theme === "dark-mode" ? "light" : "dark-mode";
+      return { ...state, theme: newTheme };
+    default:
+      return state;
+  }
+}
 
 function Navbar() {
   const { title } = useParams();
-  const [theme, setTheme] = useState(() => toggleMode());
-
-  const handleThemeToggle = (e) => {
-    e.preventDefault();
-    const newTheme = theme === "dark-mode" ? "light" : "dark-mode";
-    setTheme(newTheme);
-  };
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     document.body.className = "";
-    document.body.classList.add(theme);
-    localStorage.setItem("darkMode", theme);
-  }, [theme]);
+    document.body.classList.add(state.theme);
+    localStorage.setItem("darkMode", state.theme);
+  }, [state.theme]);
 
   return (
     <header className="header">
@@ -43,12 +49,12 @@ function Navbar() {
           <label
             htmlFor="dark"
             className="dark-btn"
-            onClick={handleThemeToggle}
+            onClick={() => dispatch({ type: "TOGGLE_THEME" })}
           >
             <input
               type="checkbox"
               id="dark"
-              checked={theme === "dark-mode"}
+              checked={state.theme === "dark-mode"}
               readOnly
             />
             <span>
